@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpool App - Welcome</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <main class="home-main">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">Welcome to Carpool App</h1>
+            <p class="welcome-subtitle">Find or offer rides across Algeria</p>
+        </section>
+
+        <!-- Mode Selection Cards -->
+        <section class="mode-selection">
+            <div class="mode-card passenger-card" onclick="window.location.href='/static/pages/trips.html'">
+                <div class="card-icon">
+                    <i class="fas fa-user"></i>
+                </div>
+                <h3 class="card-title">Passenger Mode</h3>
+                <p class="card-description">Search trips, make offers and travel easily.</p>
+            </div>
+
+            <div class="mode-card driver-card" onclick="window.location.href='/static/pages/driver_profile.html'">
+                <div class="card-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h3 class="card-title">Driver Mode</h3>
+                <p class="card-description">Offer rides, accept offers and earn money.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

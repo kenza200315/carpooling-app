@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Covoiturage Algeria</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>💬 Messages</h1>
+            <p class="header-subtitle">Chat with your driver or passenger</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/pages/home.html" class="nav-link">Home</a>
+            <a href="/static/pages/trips.html" class="nav-link">Find Trips</a>
+            <a href="/static/pages/create_trip.html" class="nav-link">Offer Ride</a>
+            <a href="/static/pages/trip_history.html" class="nav-link">My Trips</a>
+        </div>
+    </nav>
+
+    <main>
+        <div id="alerts-container"></div>
+
+        <div class="chat-container">
+            <div class="chat-header">
+                <div>
+                    <h3><i class="fas fa-user"></i> <span id="partner-name">Chat</span></h3>
+                    <small>Trip ID: <span id="trip-id-display">-</span></small>
+                </div>
+            </div>
+            
+            <div class="chat-messages" id="messages-container">
+                <div class="text-center" style="padding: 2rem; color: var(--text-light);">
+                    <p><i class="fas fa-commenting"></i> No messages yet</p>
+                </div>
+            </div>
+            
+            <div class="chat-input-area">
+                <form id="message-form" class="input-group">
+                    <input type="hidden" id="chat-trip-id">
+                    <input type="hidden" id="chat-sender-id" value="1">
+                    <input type="text" id="message-input" class="form-input" placeholder="Type your message..." required>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tripId = urlParams.get('trip_id');
+            const partnerName = urlParams.get('partner_name') || 'User';
+            
+            if (tripId) {
+                document.getElementById('chat-trip-id').value = tripId;
+                document.getElementById('trip-id-display').textContent = tripId;
+                document.getElementById('partner-name').textContent = partnerName;
+                loadChatMessages(tripId);
+            }
+            
+            document.getElementById('message-form').addEventListener('submit', sendMessage);
+        });
+
+        function loadChatMessages(tripId) {
+            fetch(`/messages/${tripId}`)
+                .then(res => res.json())
+                .then(messages => {
+                    const container = document.getElementById('messages-container');
+                    if (!messages || messages.length === 0) {
+                        container.innerHTML = '<div class="text-center" style="padding: 2rem; color: var(--text-light);"><p><i class="fas fa-commenting"></i> No messages yet</p></div>';
+                        return;
+                    }
+
+                    container.innerHTML = messages.map(msg => `
+                        <div class="message ${msg.sender_id == 1 ? 'sent' : 'received'}">
+                            <div class="message-bubble">
+                                ${msg.message}
+                                <div class="message-time">${new Date(msg.created_at).toLocaleTimeString()}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    container.scrollTop = container.scrollHeight;
+                })
+                .catch(err => showError('Failed to load messages'));
+        }
+
+        function sendMessage(e) {
+            e.preventDefault();
+            
+            const tripId = document.getElementById('chat-trip-id').value;
+            const message = document.getElementById('message-input').value;
+            const senderId = parseInt(document.getElementById('chat-sender-id').value);
+            
+            fetch('/messages', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    trip_id: parseInt(tripId),
+                    sender_id: senderId,
+                    receiver_id: senderId === 1 ? 2 : 1,
+                    message: message
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                document.getElementById('message-input').value = '';
+                loadChatMessages(tripId);
+                showSuccess('Message sent!');
+            })
+            .catch(err => showError('Failed to send message'));
+        }
+    </script>
+</body>
+</html>

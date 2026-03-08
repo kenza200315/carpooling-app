@@ -3,83 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Créer un trajet - Covoiturage</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <title>Create Trip - Redirecting</title>
+    <script>
+        // Redirect to new create trip page
+        window.location.href = '/static/pages/create_trip.html';
+    </script>
 </head>
 <body>
-    <header>
-        <div class="header-content">
-            <h1>🚗 Créer un nouveau trajet</h1>
-            <p class="header-subtitle">Partagez votre trajet et gagnez de l'argent</p>
-        </div>
-    </header>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="/static/index.html" class="nav-link">Accueil</a>
-            <a href="/static/create_trip.html" class="nav-link active">Créer un trajet</a>
-            <a href="/static/trips.html" class="nav-link">Parcourir les trajets</a>
-        </div>
-    </nav>
-    <main>
-        <form id="create-trip-form">
-            <h2 style="color: #667eea; margin-top: 0;">Détails du trajet</h2>
-            
-            <label for="driver_id">ID du chauffeur:</label>
-            <input type="number" id="driver_id" name="driver_id" required placeholder="Votre ID de chauffeur">
-            
-            <label for="departure_city">Ville de départ:</label>
-            <input type="text" id="departure_city" name="departure_city" required placeholder="Par exemple, Paris">
-            
-            <label for="destination_city">Ville de destination:</label>
-            <input type="text" id="destination_city" name="destination_city" required placeholder="Par exemple, Lyon">
-            
-            <label for="price">Prix par place (€):</label>
-            <input type="number" id="price" name="price" step="0.01" required placeholder="Par exemple, 25.50">
-            
-            <label for="available_seats">Places disponibles:</label>
-            <input type="number" id="available_seats" name="available_seats" required placeholder="Par exemple, 4">
-            
-            <button type="submit">Créer le trajet</button>
-        </form>
-    </main>
-    <footer>
-        <p>&copy; 2026 Application de Covoiturage. Tous droits réservés.</p>
-    </footer>
-    <script src="/static/app.js"></script>
-    <script>
-        if (document.getElementById('create-trip-form')) {
-            document.getElementById('create-trip-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                const data = {
-                    driver_id: parseInt(formData.get('driver_id')),
-                    departure_city: formData.get('departure_city'),
-                    destination_city: formData.get('destination_city'),
-                    price: parseFloat(formData.get('price')),
-                    available_seats: parseInt(formData.get('available_seats'))
-                };
-                fetch('/trips', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(data)
-                })
-                .then(response => {
-                    if (!response.ok) throw new Error('Failed to create trip');
-                    return response.json();
-                })
-                .then(data => {
-                    alert('Trajet créé avec succès! ID du trajet: ' + data.id);
-                    // Redirect to trips page after 1 second
-                    setTimeout(() => {
-                        window.location.href = '/static/trips.html';
-                    }, 1000);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Erreur lors de la création du trajet: ' + error.message);
-                });
-            });
-        }
-    </script>
+    <p>Redirecting to the new create trip page...</p>
 </body>
 </html>

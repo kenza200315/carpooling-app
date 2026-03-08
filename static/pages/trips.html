@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Trips - Covoiturage Algeria</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🚗 Find Your Ride</h1>
+            <p class="header-subtitle">Browse available trips across Algeria</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/pages/home.html" class="nav-link">Home</a>
+            <a href="/static/pages/trips.html" class="nav-link active">Find Trips</a>
+            <a href="/static/pages/create_trip.html" class="nav-link">Offer Ride</a>
+            <a href="/static/pages/trip_history.html" class="nav-link">My Trips</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Alerts -->
+        <div id="alerts-container"></div>
+
+        <!-- Search Filters -->
+        <div class="search-filters">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-search"></i> Search Trips</h3>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="departure_city" class="form-label">From</label>
+                        <input type="text" id="departure_city" class="form-input" placeholder="e.g., Algiers">
+                    </div>
+                    <div class="form-group">
+                        <label for="destination_city" class="form-label">To</label>
+                        <input type="text" id="destination_city" class="form-input" placeholder="e.g., Oran">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="max_price" class="form-label">Max Price (DA)</label>
+                        <input type="number" id="max_price" class="form-input" placeholder="5000">
+                    </div>
+                    <div class="form-group">
+                        <label for="min_seats" class="form-label">Min Seats</label>
+                        <input type="number" id="min_seats" class="form-input" step="1" min="1" value="1" placeholder="1">
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="applyFilters()"><i class="fas fa-search"></i> Search</button>
+                    <button class="btn btn-outline" onclick="resetFilters()"><i class="fas fa-times"></i> Clear</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trips Grid -->
+        <div id="trips-container" class="trips-grid">
+            <div class="flex-center" style="grid-column: 1/-1; padding: 3rem;">
+                <div class="loader"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Make Offer Modal -->
+    <div id="offer-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-tag"></i> Make an Offer</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="offer-form">
+                <input type="hidden" id="offer-trip-id">
+                <input type="hidden" id="offer-driver-id">
+                
+                <div class="form-group">
+                    <label for="passenger_name" class="form-label">Your Name</label>
+                    <input type="text" id="passenger_name" class="form-input" placeholder="Your name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="passenger_phone" class="form-label">Phone Number</label>
+                    <input type="tel" id="passenger_phone" class="form-input" placeholder="+213 6XX XXX XXX">
+                </div>
+                
+                <div class="form-group">
+                    <label for="proposed_price" class="form-label">Proposed Price (DA)</label>
+                    <input type="number" id="proposed_price" class="form-input" step="100" placeholder="2500" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="offer_message" class="form-label">Message (Optional)</label>
+                    <textarea id="offer_message" class="form-textarea" placeholder="E.g., Can you make a stop in Blida?"></textarea>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Offer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Trip Details Modal -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle"></i> Trip Details</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="trip-details-content"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTrips();
+        });
+    </script>
+</body>
+</html>

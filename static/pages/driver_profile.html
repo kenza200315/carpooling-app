@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driver Profile - Covoiturage</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🚗 Driver Profile Setup</h1>
+            <p class="header-subtitle">Complete your profile to start offering rides</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/pages/home.html" class="nav-link">Home</a>
+            <a href="/static/pages/driver_profile.html" class="nav-link active">Driver Profile</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">Driver Information</h2>
+            </div>
+
+            <form id="driver-profile-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone_number" class="form-label">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" class="form-input" required placeholder="+33 6 12 34 56 78">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="car_brand" class="form-label">Car Brand</label>
+                        <input type="text" id="car_brand" name="car_brand" class="form-input" required placeholder="e.g., Renault, Peugeot">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="car_color" class="form-label">Car Color</label>
+                        <input type="text" id="car_color" name="car_color" class="form-input" required placeholder="e.g., Blue, White">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="car_plate_number" class="form-label">License Plate Number</label>
+                        <input type="text" id="car_plate_number" name="car_plate_number" class="form-input" required placeholder="e.g., AB-123-CD">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="identity_card_photo" class="form-label">Identity Card Photo</label>
+                    <div class="file-upload">
+                        <input type="file" id="identity_card_photo" name="identity_card_photo" accept="image/*" required>
+                        <label for="identity_card_photo" class="file-upload-label">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload your identity card photo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Create Driver Profile</button>
+                    <a href="/static/pages/home.html" class="btn btn-outline">Back to Home</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Why Complete Your Profile?</h3>
+            </div>
+            <ul class="benefits-list">
+                <li><i class="fas fa-check-circle"></i> Build trust with passengers</li>
+                <li><i class="fas fa-check-circle"></i> Increase booking rates</li>
+                <li><i class="fas fa-check-circle"></i> Comply with platform requirements</li>
+                <li><i class="fas fa-check-circle"></i> Access premium features</li>
+            </ul>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Covoiturage. All rights reserved.</p>
+    </footer>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

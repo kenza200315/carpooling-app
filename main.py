@@ -12,6 +12,8 @@ from routers.reservations import router as reservations_router
 from routers.reviews import router as reviews_router
 from routers.notifications import router as notifications_router
 from routers.admin import router as admin_router
+from routers.driver_profiles import router as driver_profiles_router
+from routers.messages import router as messages_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -40,6 +42,16 @@ app.include_router(reservations_router)
 app.include_router(reviews_router)
 app.include_router(notifications_router)
 app.include_router(admin_router)
+app.include_router(driver_profiles_router)
+app.include_router(messages_router)
+
+@app.get("/")
+def read_root():
+    return {
+        "message": "Welcome to Carpooling API",
+        "version": "2.0.0",
+        "docs": "/docs"
+    }
 
 @app.get("/")
 def read_root():

@@ -27,12 +27,38 @@ class Token(BaseModel):
     token_type: str = "bearer"
     user: Optional[User] = None
 
+class DriverProfileBase(BaseModel):
+    user_id: int
+    phone_number: str
+    car_brand: str
+    car_color: str
+    car_plate_number: str
+    identity_card_photo: str
+    driver_photo: Optional[str] = None
+
+class DriverProfileCreate(DriverProfileBase):
+    pass
+
+class DriverProfile(DriverProfileBase):
+    id: int
+    is_verified: bool
+    created_at: datetime
+    class Config:
+        from_attributes = True
+
 class TripBase(BaseModel):
     driver_id: int
     departure_city: str
     destination_city: str
     price: float
     available_seats: int
+    departure_lat: Optional[float] = None
+    departure_lng: Optional[float] = None
+    destination_lat: Optional[float] = None
+    destination_lng: Optional[float] = None
+
+class TripCreate(TripBase):
+    description: Optional[str] = None
 
 class TripCreateResponse(BaseModel):
     id: int
@@ -41,12 +67,10 @@ class TripCreateResponse(BaseModel):
     destination_city: str
     price: float
     available_seats: int
-    created_at: datetime
-    class Config:
-        from_attributes = True
-
-class TripCreate(BaseModel):
-    id: int
+    departure_lat: Optional[float] = None
+    departure_lng: Optional[float] = None
+    destination_lat: Optional[float] = None
+    destination_lng: Optional[float] = None
     created_at: datetime
     class Config:
         from_attributes = True
@@ -58,6 +82,10 @@ class TripResponse(BaseModel):
     destination_city: str
     price: float
     available_seats: int
+    departure_lat: Optional[float]
+    departure_lng: Optional[float]
+    destination_lat: Optional[float]
+    destination_lng: Optional[float]
     created_at: str
     driver_name: str
     class Config:
@@ -65,6 +93,8 @@ class TripResponse(BaseModel):
 
 class Trip(TripBase):
     id: int
+    description: Optional[str]
+    status: str
     created_at: datetime
     driver_name: str
     class Config:
@@ -75,11 +105,18 @@ class OfferBase(BaseModel):
     passenger_name: str
     proposed_price: float
 
+class OfferCreate(OfferBase):
+    passenger_id: Optional[int] = None
+    passenger_phone: Optional[str] = None
+
 class Offer(OfferBase):
     id: int
+    passenger_id: Optional[int]
+    passenger_phone: Optional[str]
     status: str
-    counter_price: Optional[float] = None
+    counter_price: Optional[float]
     created_at: datetime
+    updated_at: datetime
     class Config:
         from_attributes = True
 
@@ -87,23 +124,13 @@ class OfferUpdate(BaseModel):
     status: str
     counter_price: Optional[float] = None
 
-class PaymentBase(BaseModel):
-    trip_id: int
-    passenger_id: int
-    amount: float
-    payment_method: str
-
-class Payment(PaymentBase):
-    id: int
-    status: str
-    created_at: datetime
-    class Config:
-        from_attributes = True
-
 class ReservationBase(BaseModel):
     trip_id: int
     passenger_id: int
-    seats_reserved: int
+    seats_booked: int = 1
+
+class ReservationCreate(ReservationBase):
+    pass
 
 class Reservation(ReservationBase):
     id: int
@@ -112,11 +139,49 @@ class Reservation(ReservationBase):
     class Config:
         from_attributes = True
 
+class PaymentBase(BaseModel):
+    trip_id: int
+    passenger_id: int
+    amount: float
+    payment_method: str = "cash"
+
+class PaymentCreate(PaymentBase):
+    pass
+
+class Payment(PaymentBase):
+    id: int
+    payment_status: str
+    transaction_id: Optional[str]
+    created_at: datetime
+    class Config:
+        from_attributes = True
+
+class MessageBase(BaseModel):
+    trip_id: int
+    sender_id: int
+    receiver_id: int
+    message: str
+
+class MessageCreate(MessageBase):
+    pass
+
+class Message(MessageBase):
+    id: int
+    is_read: bool
+    created_at: datetime
+    class Config:
+        from_attributes = True
+
 class ReviewBase(BaseModel):
     trip_id: int
     reviewer_id: int
+    reviewee_id: int
     rating: int
-    comment: str
+    comment: Optional[str] = None
+    review_type: str
+
+class ReviewCreate(ReviewBase):
+    pass
 
 class Review(ReviewBase):
     id: int
@@ -126,11 +191,16 @@ class Review(ReviewBase):
 
 class NotificationBase(BaseModel):
     user_id: int
+    title: str
     message: str
+    type: str
+
+class NotificationCreate(NotificationBase):
+    pass
 
 class Notification(NotificationBase):
     id: int
-    status: str
+    is_read: bool
     created_at: datetime
     class Config:
         from_attributes = True

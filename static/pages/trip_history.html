@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Trips - Covoiturage Algeria</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>📋 My Trips</h1>
+            <p class="header-subtitle">View your trip history and details</p>
+        </div>
+    </header>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/pages/home.html" class="nav-link">Home</a>
+            <a href="/static/pages/trips.html" class="nav-link">Find Trips</a>
+            <a href="/static/pages/create_trip.html" class="nav-link">Offer Ride</a>
+            <a href="/static/pages/trip_history.html" class="nav-link active">My Trips</a>
+        </div>
+    </nav>
+
+    <main>
+        <div id="alerts-container"></div>
+
+        <!-- Tabs -->
+        <div class="card" style="margin-bottom: 0;">
+            <div style="display: flex; gap: 1rem; border-bottom: 1px solid var(--border-color);">
+                <button class="nav-link" onclick="showTab('active')" style="border-radius: 0; border-bottom: 3px solid var(--primary-color); padding: 1rem 1.5rem;">
+                    <i class="fas fa-play-circle"></i> Active
+                </button>
+                <button class="nav-link" onclick="showTab('completed')" style="border-radius: 0; padding: 1rem 1.5rem;">
+                    <i class="fas fa-check-circle"></i> Completed
+                </button>
+                <button class="nav-link" onclick="showTab('cancelled')" style="border-radius: 0; padding: 1rem 1.5rem;">
+                    <i class="fas fa-times-circle"></i> Cancelled
+                </button>
+            </div>
+        </div>
+
+        <!-- History Container -->
+        <div id="history-container" class="trips-grid">
+            <div class="flex-center" style="grid-column: 1/-1; padding: 3rem;">
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <!-- Review Modal -->
+        <div id="review-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-star"></i> Leave a Review</h3>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="review-form">
+                    <input type="hidden" id="review-trip-id">
+                    <input type="hidden" id="review-driver-id">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Rating</label>
+                        <div class="stars" id="rating-stars">
+                            <span class="star" data-value="1"><i class="fas fa-star"></i></span>
+                            <span class="star" data-value="2"><i class="fas fa-star"></i></span>
+                            <span class="star" data-value="3"><i class="fas fa-star"></i></span>
+                            <span class="star" data-value="4"><i class="fas fa-star"></i></span>
+                            <span class="star" data-value="5"><i class="fas fa-star"></i></span>
+                        </div>
+                        <input type="hidden" id="review-rating" value="5">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="review-comment" class="form-label">Comment (Optional)</label>
+                        <textarea id="review-comment" class="form-textarea" placeholder="Share your experience..."></textarea>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Payment Modal -->
+        <div id="payment-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-credit-card"></i> Confirm Payment</h3>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                </div>
+                <form id="payment-form">
+                    <input type="hidden" id="payment-trip-id">
+                    
+                    <div class="form-group">
+                        <label class="form-label">Payment Method</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <label style="border: 2px solid var(--border-color); border-radius: var(--border-radius); padding: 1rem; cursor: pointer; text-align: center;">
+                                <input type="radio" name="payment_method" value="cash" required>
+                                <i class="fas fa-money-bill" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i> Cash
+                            </label>
+                            <label style="border: 2px solid var(--border-color); border-radius: var(--border-radius); padding: 1rem; cursor: pointer; text-align: center;">
+                                <input type="radio" name="payment_method" value="card" required>
+                                <i class="fas fa-credit-card" style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;"></i> Card
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="payment-amount" class="form-label">Amount (DA)</label>
+                        <input type="number" id="payment-amount" class="form-input" readonly>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                        <button type="submit" class="btn btn-success">Confirm Payment</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="/static/js/app.js"></script>
+    <script>
+        let currentTab = 'active';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTripHistory();
+
+            const stars = document.querySelectorAll('#rating-stars .star');
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = this.dataset.value;
+                    document.getElementById('review-rating').value = rating;
+                    stars.forEach(s => s.classList.remove('active'));
+                    for (let i = 0; i < rating; i++) {
+                        stars[i].classList.add('active');
+                    }
+                });
+            });
+
+            document.getElementById('review-form').addEventListener('submit', submitReview);
+            document.getElementById('payment-form').addEventListener('submit', submitPayment);
+        });
+
+        function showTab(tab) {
+            currentTab = tab;
+            const buttons = document.querySelectorAll('.nav-link');
+            buttons.forEach((btn, idx) => {
+                btn.style.borderBottomColor = 'transparent';
+                btn.style.borderBottomWidth = '3px';
+            });
+            event.target.style.borderBottomColor = 'var(--primary-color)';
+            loadTripHistory();
+        }
+
+        function loadTripHistory() {
+            fetch('/users/1/history')
+                .then(res => res.json())
+                .then(trips => {
+                    const filtered = trips.filter(t => t.status === currentTab);
+                    const container = document.getElementById('history-container');
+                    
+                    if (filtered.length === 0) {
+                        container.innerHTML = `<div class="text-center" style="grid-column: 1/-1; padding: 3rem;">
+                            <p style="color: var(--text-light);"><i class="fas fa-inbox"></i> No ${currentTab} trips</p>
+                        </div>`;
+                        return;
+                    }
+
+                    container.innerHTML = filtered.map(trip => `
+                        <div class="trip-card">
+                            <div class="trip-header">
+                                <div class="trip-route">${trip.departure_city} → ${trip.destination_city}</div>
+                            </div>
+                            <div class="trip-body">
+                                <div class="trip-info">
+                                    <div class="trip-info-item">
+                                        <div class="trip-info-label">Status</div>
+                                        <div style="text-transform: capitalize;">${trip.status}</div>
+                                    </div>
+                                    <div class="trip-info-item">
+                                        <div class="trip-info-label">Seats</div>
+                                        <div>${trip.available_seats} seats</div>
+                                    </div>
+                                </div>
+                                <div class="trip-price">${trip.price} DA</div>
+                                <div style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 1rem;">
+                                    Created: ${new Date(trip.created_at).toLocaleDateString()}
+                                </div>
+                                <div class="trip-footer">
+                                    <button class="btn btn-primary btn-trip" onclick="openPaymentModal(${trip.id}, ${trip.price})">
+                                        <i class="fas fa-credit-card"></i> Pay
+                                    </button>
+                                    ${currentTab === 'completed' ? `<button class="btn btn-outline btn-trip" onclick="openReviewModal(${trip.id})"><i class="fas fa-star"></i> Review</button>` : ''}
+                                    ${currentTab === 'active' ? `<button class="btn btn-danger btn-trip" onclick="cancelTrip(${trip.id})"><i class="fas fa-times"></i> Cancel</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(err => showError('Failed to load trips'));
+        }
+
+        function openReviewModal(tripId) {
+            document.getElementById('review-trip-id').value = tripId;
+            document.getElementById('review-modal').classList.add('active');
+        }
+
+        function openPaymentModal(tripId, amount) {
+            document.getElementById('payment-trip-id').value = tripId;
+            document.getElementById('payment-amount').value = amount;
+            document.getElementById('payment-modal').classList.add('active');
+        }
+
+        function submitReview(e) {
+            e.preventDefault();
+            const tripId = document.getElementById('review-trip-id').value;
+            const rating = document.getElementById('review-rating').value;
+            const comment = document.getElementById('review-comment').value;
+
+            fetch('/reviews', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    trip_id: parseInt(tripId),
+                    reviewer_id: 1,
+                    reviewee_id: 2,
+                    rating: parseInt(rating),
+                    comment: comment,
+                    review_type: 'driver_review'
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                showSuccess('Review submitted!');
+                closeModal();
+                loadTripHistory();
+            })
+            .catch(err => showError('Failed to submit review'));
+        }
+
+        function submitPayment(e) {
+            e.preventDefault();
+            const tripId = document.getElementById('payment-trip-id').value;
+            const method = document.querySelector('input[name="payment_method"]:checked').value;
+            const amount = document.getElementById('payment-amount').value;
+
+            fetch('/payments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    trip_id: parseInt(tripId),
+                    passenger_id: 1,
+                    amount: parseFloat(amount),
+                    payment_method: method
+                })
+            })
+            .then(res => res.json())
+            .then(() => {
+                showSuccess('Payment confirmed!');
+                closeModal();
+                loadTripHistory();
+            })
+            .catch(err => showError('Failed to process payment'));
+        }
+
+        function cancelTrip(tripId) {
+            if (confirm('Are you sure you want to cancel this trip?')) {
+                fetch(`/trips/${tripId}/cancel`, { method: 'PUT' })
+                    .then(res => res.json())
+                    .then(() => {
+                        showSuccess('Trip cancelled');
+                        loadTripHistory();
+                    })
+                    .catch(err => showError('Failed to cancel trip'));
+            }
+        }
+    </script>
+</body>
+</html>
