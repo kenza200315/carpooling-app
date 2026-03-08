@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make an Offer - Carpooling</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>💰 Make an Offer</h1>
+            <p class="header-subtitle">Propose your price for a trip</p>
+        </div>
+    </header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/index.html" class="nav-link">Home</a>
+            <a href="/static/trips.html" class="nav-link active">Browse Trips</a>
+        </div>
+    </nav>
+    <main>
+        <form id="make-offer-form">
+            <h2 style="color: #667eea; margin-top: 0;">Your Offer Details</h2>
+            
+            <label for="trip_id">Trip ID:</label>
+            <input type="number" id="trip_id" name="trip_id" required placeholder="Enter the trip ID">
+            
+            <label for="passenger_name">Your Name:</label>
+            <input type="text" id="passenger_name" name="passenger_name" required placeholder="Your full name">
+            
+            <label for="proposed_price">Proposed Price ($):</label>
+            <input type="number" id="proposed_price" name="proposed_price" step="0.01" required placeholder="e.g., 20.00">
+            
+            <button type="submit">Submit Offer</button>
+        </form>
+    </main>
+    <footer>
+        <p>&copy; 2026 Carpooling App. All rights reserved.</p>
+    </footer>
+    <script src="/static/app.js"></script>
+    <script>
+        if (document.getElementById('make-offer-form')) {
+            document.getElementById('make-offer-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = {
+                    trip_id: parseInt(formData.get('trip_id')),
+                    passenger_name: formData.get('passenger_name'),
+                    proposed_price: parseFloat(formData.get('proposed_price'))
+                };
+                fetch('http://localhost:8000/offers', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(data)
+                })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to submit offer');
+                    return response.json();
+                })
+                .then(data => {
+                    alert('Offer submitted successfully! Offer ID: ' + data.id);
+                    document.getElementById('make-offer-form').reset();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error submitting offer: ' + error.message);
+                });
+            });
+        }
+    </script>
+</body>
+</html>

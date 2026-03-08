@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carpooling App - Home</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🚗 Welcome to Carpooling</h1>
+            <p class="header-subtitle">Share rides, save money, meet new people</p>
+        </div>
+    </header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/index.html" class="nav-link active">Home</a>
+            <a href="/static/create_trip.html" class="nav-link">Create Trip</a>
+            <a href="/static/trips.html" class="nav-link">Browse Trips</a>
+        </div>
+    </nav>
+    <main>
+        <div style="max-width: 800px; margin: 0 auto;">
+            <section style="background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+                <h2 style="color: #667eea; margin-top: 0;">How It Works</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔍</div>
+                        <h3 style="color: #333;">Browse Trips</h3>
+                        <p>Find available trips that match your schedule</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">💰</div>
+                        <h3 style="color: #333;">Negotiate Price</h3>
+                        <p>Propose your price and negotiate with drivers</p>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">✅</div>
+                        <h3 style="color: #333;">Book Your Ride</h3>
+                        <p>Get accepted and enjoy your carpooling experience</p>
+                    </div>
+                </div>
+            </section>
+            <section style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 2rem; color: white; text-align: center;">
+                <h2 style="margin-top: 0;">Ready to Share a Ride?</h2>
+                <p style="margin-bottom: 1.5rem;">Start helping the environment while saving money</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="/static/trips.html" style="display: inline-block; padding: 0.75rem 2rem; background: white; color: #667eea; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">Browse Trips</a>
+                    <a href="/static/create_trip.html" style="display: inline-block; padding: 0.75rem 2rem; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 8px; font-weight: 600; border: 2px solid white; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">Publish Trip</a>
+                </div>
+            </section>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Carpooling App. All rights reserved.</p>
+    </footer>
+</body>
+</html>

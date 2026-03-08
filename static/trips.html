@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trajets disponibles - Covoiturage</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>🚗 Trajets disponibles</h1>
+            <p class="header-subtitle">Trouvez votre trajet parfait ou proposez-en un</p>
+        </div>
+    </header>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/static/index.html" class="nav-link">Accueil</a>
+            <a href="/static/create_trip.html" class="nav-link">Créer un trajet</a>
+            <a href="/static/trips.html" class="nav-link active">Parcourir les trajets</a>
+        </div>
+    </nav>
+    <main>
+        <div id="trips-container" class="trips-grid">
+            <!-- Les trajets seront chargés ici -->
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2026 Application de Covoiturage. Tous droits réservés.</p>
+    </footer>
+    <script src="/static/app.js"></script>
+    <script>
+        // Charger les trajets quand la page se charge
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTrips();
+        });
+    </script>
+</body>
+</html>
